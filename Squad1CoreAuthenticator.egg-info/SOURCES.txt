@@ -1,0 +1,8 @@
+README.md
+setup.py
+Squad1CoreAuthenticator.egg-info/PKG-INFO
+Squad1CoreAuthenticator.egg-info/SOURCES.txt
+Squad1CoreAuthenticator.egg-info/dependency_links.txt
+Squad1CoreAuthenticator.egg-info/requires.txt
+Squad1CoreAuthenticator.egg-info/top_level.txt
+authenticator/__init__.py
