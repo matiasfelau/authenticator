@@ -37,8 +37,8 @@ def _consume(connection):
     """
     try:
         channel = connection.channel()
-        channel.exchange_declare(exchange='gestion_interna.rpc', exchange_type='direct', durable=True)
-        channel.queue_declare(queue='gestion_interna.rpc', exclusive=False, durable=True)
+        channel.exchange_declare(exchange='gestion_interna.rpc', exchange_type='direct', durable=False)
+        channel.queue_declare(queue='gestion_interna.rpc', exclusive=True, durable=False)
         channel.queue_bind(
             exchange='gestion_interna.rpc',
             queue='gestion_interna.rpc',
