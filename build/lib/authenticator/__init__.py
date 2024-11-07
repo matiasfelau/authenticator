@@ -37,8 +37,8 @@ def _consume(connection):
     """
     try:
         channel = connection.channel()
-        channel.exchange_declare(exchange='gestion_interna.rpc', exchange_type='direct', durable=True)
-        channel.queue_declare(queue='gestion_interna.rpc', exclusive=False, durable=True)
+        channel.exchange_declare(exchange='gestion_interna.rpc', exchange_type='direct', durable=False)
+        channel.queue_declare(queue='gestion_interna.rpc', exclusive=True, durable=False)
         channel.queue_bind(
             exchange='gestion_interna.rpc',
             queue='gestion_interna.rpc',
@@ -53,7 +53,19 @@ def _consume(connection):
         return None
 
 
-def confirm(channel, headers, method):
+def confirm(channel, method, headers, body):
+    """
+
+    :param body:
+    :param channel:
+    :param headers:
+    :param method:
+    :return:
+    """
+    _respond(channel, headers, method, body)
+
+
+def deny(channel, method, headers):
     """
 
     :param channel:
@@ -61,32 +73,22 @@ def confirm(channel, headers, method):
     :param method:
     :return:
     """
-    _respond(channel, True, headers, method)
+    body = ''
+    _respond(channel, headers, method, body)
 
 
-def deny(channel, headers, method):
+def _respond(channel, headers, method, body):
     """
 
     :param channel:
     :param headers:
     :param method:
-    :return:
-    """
-    _respond(channel, False, headers, method)
-
-
-def _respond(channel, response, headers, method):
-    """
-
-    :param channel:
-    :param response:
-    :param headers:
-    :param method:
+    :param body:
     :return:
     """
     channel.basic_publish(exchange='',
                           routing_key=headers.reply_to,
                           properties=pika.BasicProperties(correlation_id = \
                                                          headers.correlation_id),
-                          body=response)
+                          body=body)
     channel.basic_ack(delivery_tag=method.delivery_tag)

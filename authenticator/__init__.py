@@ -45,15 +45,27 @@ def _consume(connection):
             routing_key='gestion_interna.rpc'
         )
         channel.basic_consume(queue='gestion_interna.rpc', on_message_callback=callback)
-        channel.start_consuming()
         print('\nEscuchando mensajes de autenticación en modo RPC...')
+        channel.start_consuming()
         return channel
     except Exception as e:
         print(f'\nError in sender.initialize_consumer_with_thread(): \n{str(e)}')
         return None
 
 
-def confirm(channel, headers, method):
+def confirm(channel, method, headers, body):
+    """
+
+    :param body:
+    :param channel:
+    :param headers:
+    :param method:
+    :return:
+    """
+    _respond(channel, headers, method, body)
+
+
+def deny(channel, method, headers):
     """
 
     :param channel:
@@ -61,32 +73,22 @@ def confirm(channel, headers, method):
     :param method:
     :return:
     """
-    _respond(channel, True, headers, method)
+    body = ''
+    _respond(channel, headers, method, body)
 
 
-def deny(channel, headers, method):
+def _respond(channel, headers, method, body):
     """
 
     :param channel:
     :param headers:
     :param method:
-    :return:
-    """
-    _respond(channel, False, headers, method)
-
-
-def _respond(channel, response, headers, method):
-    """
-
-    :param channel:
-    :param response:
-    :param headers:
-    :param method:
+    :param body:
     :return:
     """
     channel.basic_publish(exchange='',
                           routing_key=headers.reply_to,
                           properties=pika.BasicProperties(correlation_id = \
                                                          headers.correlation_id),
-                          body=response)
+                          body=body)
     channel.basic_ack(delivery_tag=method.delivery_tag)

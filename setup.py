@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="Squad1CoreAuthenticator",  # Nombre del paquete
-    version="1.3",  # Versión del paquete
+    version="1.5.2",  # Versión del paquete
     description="paquete utilizado para autenticar mensajes.",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",  # Formato del README
