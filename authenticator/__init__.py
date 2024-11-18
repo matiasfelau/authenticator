@@ -29,6 +29,7 @@ def start_authenticator(connection):
     except Exception as e:
         print(f'\nError in authenticator.start_authenticator(): \n{str(e)}')
 
+
 def _consume(connection):
     """
 
